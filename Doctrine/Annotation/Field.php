@@ -59,13 +59,7 @@ class Field extends Annotation {
 		if (!isset(self::$TYP_MAPPING[$this->type])) {
 			throw new \RuntimeException('unsupported type'. $this->type);
 		}
-<<<<<<< HEAD
-		
 		return self::$TYP_MAPPING[$this->type];
-=======
-
-		throw new \RuntimeException('unsupported type'. $this->type);
->>>>>>> Added Solr highlights functionality + offests functionality + commented field mapping
 	}
 
 	/**
