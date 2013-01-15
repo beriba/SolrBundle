@@ -7,12 +7,12 @@ use Doctrine\Common\Annotations\Annotation;
  * @Annotation
  */
 class Field extends Annotation {
-	
+
 	/**
 	 * @var string
 	 */
 	public $type;
-	
+
 	/**
 	 * @var string
 	 */
@@ -22,23 +22,28 @@ class Field extends Annotation {
 	 * @var numeric
 	 */
 	public $boost = 0;
-	
+
 	/**
 	 * @var array
 	 */
 	private static $TYP_MAPPING = array(
-		'string'	=> '_s',
-		'text'		=> '_t',
-		'date'		=> '_dt',
-		'boolean'	=> '_b',
-		'integer'	=> '_i'		
+//		'string'	=> '_s',
+//		'text'		=> '_t',
+//		'date'		=> '_dt',
+//		'boolean'	=> '_b',
+//		'integer'	=> '_i'
+		'string'	=> '',
+		'text'		=> '',
+		'date'		=> '',
+		'boolean'	=> '',
+		'integer'	=> ''
 	);
-	
+
 	/**
 	 * returns field name with type-suffix:
-	 * 
+	 *
 	 * eg: title_s
-	 * 
+	 *
 	 * @throws \RuntimeException
 	 * @return string
 	 */
@@ -54,24 +59,29 @@ class Field extends Annotation {
 		if (!isset(self::$TYP_MAPPING[$this->type])) {
 			throw new \RuntimeException('unsupported type'. $this->type);
 		}
+<<<<<<< HEAD
 		
 		return self::$TYP_MAPPING[$this->type];
+=======
+
+		throw new \RuntimeException('unsupported type'. $this->type);
+>>>>>>> Added Solr highlights functionality + offests functionality + commented field mapping
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function getValue() {
 		return $this->value;
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function __toString() {
 		return $this->name;
 	}
-	
+
 	/**
 	 * @throws \InvalidArgumentException if boost is not a number
 	 * @return number
@@ -98,7 +108,7 @@ class Field extends Annotation {
 		$words = array_map(function($value) {
     		return strtolower($value);
 		}, $words);
-		
+
 		return implode('_', $words);
 	}
 }
