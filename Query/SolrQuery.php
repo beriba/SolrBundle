@@ -110,7 +110,7 @@ class SolrQuery extends AbstractQuery
 
         foreach ($this->mappedFields as $documentField => $entityField)
         {
-            $this->searchTerms[ $documentField ] = $value;
+            $this->searchTerms[ $documentField ][] = $value;
         }
     }
 
@@ -128,7 +128,7 @@ class SolrQuery extends AbstractQuery
         {
             $documentFieldName = $documentFieldsAsValues[ $field ];
 
-            $this->searchTerms[ $documentFieldName ] = $value;
+            $this->searchTerms[ $documentFieldName ][] = $value;
         }
 
         return $this;
@@ -163,19 +163,21 @@ class SolrQuery extends AbstractQuery
         $logicOperator = 'AND';
         if (!$this->useAndOperator)
         {
-            $logicOperator = 'OR';
+            $logicOperator = "\n"; //OR operator
         }
 
         $termCount = 1;
-        foreach ($this->searchTerms as $fieldName => $fieldValue)
+        foreach ($this->searchTerms as $fieldName => $fieldValues)
         {
-            $term .= $fieldName . ':*' . $fieldValue . '*';
-            if ($termCount < count($this->searchTerms))
+            foreach ($fieldValues as $fieldValue)
             {
-                $term .= ' ' . $logicOperator . ' ';
+                if ($termCount > 1)
+                {
+                    $term .= ' ' . $logicOperator . ' ';
+                }
+                $term .= $fieldName . ':' . $fieldValue . '';
+                $termCount++;
             }
-
-            $termCount++;
         }
 
         return $term;
@@ -249,6 +251,11 @@ class SolrQuery extends AbstractQuery
     public function setHighlightSnippets($highlightSnippets)
     {
         $this->highlightSnippets = $highlightSnippets;
+    }
+
+    public function getTotalRows()
+    {
+        return $this->getResponse()->response->numFound;
     }
 
 }
