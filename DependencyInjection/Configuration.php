@@ -23,14 +23,14 @@ class Configuration implements ConfigurationInterface
 							->scalarNode('port')->defaultValue('8983')->end()
 							->arrayNode('path')
 								->useAttributeAsKey('name')
-								->prototype('scalar')->end()							
+								->prototype('scalar')->end()
 							->end()
 							->scalarNode('login')->end()
 							->scalarNode('password')->end()
 						->end()
 					->end()
 					->booleanNode('auto_index')->defaultValue(true)->end()
-					->scalarNode('entity_manager')->defaultValue('default')->end()	
+					->scalarNode('entity_manager')->defaultValue('default')->end()
 				->end();
 		
 

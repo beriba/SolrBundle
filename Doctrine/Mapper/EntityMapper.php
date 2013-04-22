@@ -10,14 +10,14 @@ class EntityMapper {
 	 * @var CreateDocumentCommandInterface
 	 */
 	private $mappingCommand = null;
-	
+
 	/**
 	 * @param AbstractDocumentCommand $command
 	 */
 	public function setMappingCommand(AbstractDocumentCommand $command) {
 		$this->mappingCommand = $command;
 	}
-	
+
 	/**
 	 * @param object $entity
 	 * @return \SolrInputDocument
@@ -26,10 +26,10 @@ class EntityMapper {
 		if ($this->mappingCommand instanceof AbstractDocumentCommand) {
 			return $this->mappingCommand->createDocument($meta);
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * @param \ArrayAccess $document
 	 * @param object $targetEntity
@@ -39,16 +39,17 @@ class EntityMapper {
 		if (null === $sourceTargetEntity) {
 			throw new \InvalidArgumentException('$sourceTargetEntity should not be null');
 		}
-		
+
 		$targetEntity = clone $sourceTargetEntity;
-		
+
 		$reflectionClass = new \ReflectionClass($targetEntity);
 		foreach ($document as $property => $value) {
 			try {
 				$classProperty = $reflectionClass->getProperty($this->removeFieldSuffix($property));
-			} catch (\ReflectionException $e) { 
+			} catch (\ReflectionException $e) {
 				try {
-					$classProperty = $reflectionClass->getProperty($this->toCamelCase($this->removeFieldSuffix($property)));
+//					$classProperty = $reflectionClass->getProperty($this->toCamelCase($this->removeFieldSuffix($property)));
+					$classProperty = $reflectionClass->getProperty($property);
 				} catch (\ReflectionException $e) {
 					continue;
 				}
@@ -57,15 +58,15 @@ class EntityMapper {
 			$classProperty->setAccessible(true);
 			$classProperty->setValue($targetEntity, $value);
 		}
-		
+
 		return $targetEntity;
 	}
-	
+
 	/**
 	 * returns the clean fieldname without type-suffix
-	 * 
+	 *
 	 * eg: title_s => title
-	 * 
+	 *
 	 * @param string $property
 	 * @return string
 	 */
@@ -73,13 +74,13 @@ class EntityMapper {
 		if (($pos = strrpos($property, '_')) !== false) {
 			return substr($property, 0, $pos);
 		}
-		
+
 		return $property;
 	}
 
 	/**
 	 * returns field name camelcased if it has underlines
-	 * 
+	 *
 	 * eg: user_id => userId
 	 *
 	 * @param string $fieldname

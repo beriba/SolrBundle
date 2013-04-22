@@ -29,7 +29,7 @@ class SolrQuery extends AbstractQuery
     private $solrFacade = null;
     private $rows;
     private $start;
-    private $highlight;
+    private $highlight = false;
     private $highlightFL;
     private $highlightSnippets;
     private $highlightSimplePre;
@@ -144,6 +144,9 @@ class SolrQuery extends AbstractQuery
         if (array_key_exists($field, $entityFieldNames))
         {
             $this->solrQuery->addField($entityFieldNames[ $field ]);
+        } else
+        {
+            throw new \Exception('Field ' . $field . ' doesn\'t exist.');
         }
 
         return $this;
